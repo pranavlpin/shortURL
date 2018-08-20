@@ -47,3 +47,20 @@ exports.postShortenurl = function (req, res) {
 
     }
 }
+
+//Creating function to redirect to original URL
+exports.getRedirecturl = function (req, res) {
+    console.log(req.params.shorturl);
+    Shorturl.findOne({
+        shortCode: req.params.shorturl
+    }, function (err, shUrl) {
+        if (shUrl) {
+            console.log(JSON.stringify(shUrl));
+            res.redirect(shUrl.originalURL);
+        } else {
+            res.json({
+                error: err
+            });
+        }
+    });
+}

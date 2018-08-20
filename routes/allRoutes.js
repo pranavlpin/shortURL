@@ -9,5 +9,9 @@ var router = express.Router();
 router
     .route("/shortenurl")
     .post(urlController.postShortenurl);
+//GET request to redirect short url to original url
+router
+    .route("/:shorturl")
+    .get(urlController.getRedirecturl);
 
 module.exports = router;
