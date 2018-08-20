@@ -4,8 +4,10 @@
 
 //requiring the model
 var Shorturl = require('../models/Shorturl');
+var Analytics = require('../models/Analytics');
 const validUrl = require("valid-url");
 const shortid = require("shortid");
+var parser = require('ua-parser-js');
 
 //creating function to shorten the URL
 exports.postShortenurl = function (req, res) {
@@ -55,7 +57,20 @@ exports.getRedirecturl = function (req, res) {
         shortCode: req.params.shorturl
     }, function (err, shUrl) {
         if (shUrl) {
-            console.log(JSON.stringify(shUrl));
+            //reading information from user-agent
+            var ua = parser(req.headers['user-agent']);
+            var analytics = new Analytics(ua);
+            analytics.shortCode = req.params.shorturl;
+            analytics.shorturlId = shUrl._id;
+            // write the result as response
+            console.log(JSON.stringify(analytics, null, '  '));
+            analytics.save(function (err) {
+                if (err) {
+                    console.log("ERROR in saving Analytics data");
+                } else {
+                    console.log("Analytics details added to database");
+                }
+            })
             res.redirect(shUrl.originalURL);
         } else {
             res.json({
