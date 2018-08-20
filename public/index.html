@@ -30,8 +30,77 @@
                 </button>
             </div>
         </div>
+        <div class="row">
+            <div class="col s12 l12 m12" id="display">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 l12 m12" id="displaylist">
+
+            </div>
+        </div>
     </div>
 
+    <script>
+        function analytics(elem) {
+            $.ajax({
+                type: "POST",
+                url: "https://shorturl-ms.herokuapp.com/urlAnalytics/",
+                data: {
+                    id: elem.id,
+                }, //Change Reward description also.
+                dataType: 'json',
+                async: false,
+                success: function (response) {
+                    alert("Visits: " + response.visits + JSON.stringify(response.summary));
+                },
+            })
+
+            //$("#loader").removeClass("loader");
+            return false;
+        }
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "https://shorturl-ms.herokuapp.com/dev/shorturl",
+                dataType: 'json',
+                async: false,
+                success: function (response) {
+                    document.getElementById("displaylist").innerHTML =
+                        "<h5>Shortened Urls:</h5>";
+                    console.log(JSON.stringify(response));
+                    for (var i = 0; i < response.length; i++) {
+
+                        document.getElementById("displaylist").innerHTML +=
+                            "<br><p>OrigURL=" + response[i]['originalURL'].substring(8, 20) + '...' +
+                            ", ShortURL=" + response[i]
+                            ['shortURL'] +
+                            "</p><button class='editBut' onClick=analytics(this) id=" +
+                            response[i]['_id'] + ">Analytics</button>";
+
+                    }
+                },
+            });
+
+
+            $("#submit").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: " https://shorturl-ms.herokuapp.com/shortenurl/",
+                    dataType: 'json',
+                    async: false,
+                    data: {
+                        baseurl: 'https://shorturl-ms.herokuapp.com',
+                        originalUrl: document.getElementById("origurl").value
+                    },
+                    success: function (response) {
+                        document.getElementById("display").innerHTML =
+                            "<h5>Shortened URL : " + response.data.shortURL + "</h5>";
+                    },
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -89,7 +89,7 @@ exports.getRedirecturl = function (req, res) {
 
 exports.postUrlAnalytics = function (req, res) {
     Analytics.find({
-        shortCode: req.body.shortCode
+        shorturlId: req.body.id
     }, function (err, analytics) {
         if (err) {
             res.send(err);
