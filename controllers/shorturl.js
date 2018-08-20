@@ -8,6 +8,7 @@ var Analytics = require('../models/Analytics');
 const validUrl = require("valid-url");
 const shortid = require("shortid");
 var parser = require('ua-parser-js');
+var _ = require('lodash');
 
 //creating function to shorten the URL
 exports.postShortenurl = function (req, res) {
@@ -93,8 +94,35 @@ exports.postUrlAnalytics = function (req, res) {
         if (err) {
             res.send(err);
         } else {
+            result = {};
+            result.os = {};
+            result.browser = {};
+            result.cpu = {};
+            //grouping by OS name and returning its count
+            var a = _.groupBy(analytics, function (n) {
+                return n.os.name;
+            });
+            for (var key in a) {
+                result.os[key] = a[key].length;
+            }
+            //grouping by CPU name and returning its count
+            var b = _.groupBy(analytics, function (n) {
+                return n.cpu.architecture;
+            });
+            for (var key in b) {
+                result.cpu[key] = b[key].length;
+            }
+            //grouping by browser name and returning its count
+            var c = _.groupBy(analytics, function (n) {
+                return n.browser.name;
+            });
+            for (var key in c) {
+                result.browser[key] = c[key].length;
+            }
+            console.log(JSON.stringify(result));
             res.json({
                 visits: analytics.length,
+                summary: result,
                 data: analytics
             });
         }
