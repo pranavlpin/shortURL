@@ -23,7 +23,7 @@ exports.postShortenurl = function (req, res) {
             //baseurl is the url of our app to append to short code generated
             var shortedurl = req.body.baseurl + '/' + urlCode;
             var item = new Shorturl({
-                originalURL: originalUrl,
+                originalURL: req.body.originalUrl,
                 shortURL: shortedurl,
                 shortCode: urlCode,
             });
