@@ -19,11 +19,11 @@ var analyticsSchema = new mongoose.Schema({
         name: String,
         version: String
     },
-    device: {
-        model: String,
-        type: String,
-        vendor: String
-    },
+    // device: {
+    //     model: String,
+    //     type: String,
+    //     vendor: String
+    // },
     cpu: {
         architecture: String
     },

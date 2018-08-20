@@ -64,15 +64,12 @@ exports.getRedirecturl = function (req, res) {
                 browser: ua.browser,
                 engine: ua.engine,
                 os: ua.os,
-                'device.type': ua.device.type,
-                'device.model': ua.device.model,
-                'device.vendor': ua.device.vendor,
                 cpu: ua.cpu,
             });
             analytics.shortCode = req.params.shorturl;
             analytics.shorturlId = shUrl._id;
             // write the result as response
-            console.log(JSON.stringify(analytics, null, '  '));
+            console.log(JSON.stringify(req.headers['user-agent'], null, '  '));
             analytics.save(function (err) {
                 if (err) {
                     console.log("ERROR in saving Analytics data", err);
@@ -84,6 +81,21 @@ exports.getRedirecturl = function (req, res) {
         } else {
             res.json({
                 error: err
+            });
+        }
+    });
+}
+
+exports.postUrlAnalytics = function (req, res) {
+    Analytics.find({
+        shortCode: req.body.shortCode
+    }, function (err, analytics) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.json({
+                visits: analytics.length,
+                data: analytics
             });
         }
     });

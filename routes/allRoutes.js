@@ -13,5 +13,8 @@ router
 router
     .route("/:shorturl")
     .get(urlController.getRedirecturl);
-
+//POST request to get analytics detail for any shortened URL
+router
+    .route("/urlAnalytics")
+    .post(urlController.postUrlAnalytics);
 module.exports = router;
