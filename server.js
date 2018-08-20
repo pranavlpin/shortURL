@@ -47,11 +47,10 @@ router.use(function (req, res, next) {
 //Register your routes with the API
 app.use("", router);
 app.use("", allRoutes);
-const PORT = 3000;
 
 
 
 //Start server on Port 7000
-app.listen(PORT, () => {
+app.listen(port, () => {
     console.log(`Server started on port`, PORT);
 });
