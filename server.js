@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 var allRoutes = require("./routes/allRoutes");
+var devRoutes = require("./routes/devRoutes");
 var cors = require("cors");
 
 //connecting to mongoLab test database
@@ -47,6 +48,7 @@ router.use(function (req, res, next) {
 //Register your routes with the API
 app.use("", router);
 app.use("", allRoutes);
+app.use("", devRoutes);
 
 
 

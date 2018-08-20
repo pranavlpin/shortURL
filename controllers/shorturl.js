@@ -59,14 +59,23 @@ exports.getRedirecturl = function (req, res) {
         if (shUrl) {
             //reading information from user-agent
             var ua = parser(req.headers['user-agent']);
-            var analytics = new Analytics(ua);
+            var analytics = new Analytics({
+                ua: ua.ua,
+                browser: ua.browser,
+                engine: ua.engine,
+                os: ua.os,
+                'device.type': ua.device.type,
+                'device.model': ua.device.model,
+                'device.vendor': ua.device.vendor,
+                cpu: ua.cpu,
+            });
             analytics.shortCode = req.params.shorturl;
             analytics.shorturlId = shUrl._id;
             // write the result as response
             console.log(JSON.stringify(analytics, null, '  '));
             analytics.save(function (err) {
                 if (err) {
-                    console.log("ERROR in saving Analytics data");
+                    console.log("ERROR in saving Analytics data", err);
                 } else {
                     console.log("Analytics details added to database");
                 }
