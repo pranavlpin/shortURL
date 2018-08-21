@@ -13,17 +13,18 @@ var _ = require('lodash');
 //creating function to shorten the URL
 exports.postShortenurl = function (req, res) {
     if (req.body === null) {
-        res.json({
+        res.status(400).json({
             message: "No data received"
         });
     } else if (JSON.stringify(req.body) === '{}') {
-        res.json({
+        res.status(400).json({
             message: "No data received"
         });
     } else {
         if (validUrl.isUri(req.body.originalUrl)) {
             const urlCode = shortid.generate();
             //baseurl is the url of our app to append to short code generated
+            req.body.baseurl = req.body.baseurl || 'https://shorturl-ms.herokuapp.com';
             var shortedurl = req.body.baseurl + '/' + urlCode;
             var item = new Shorturl({
                 originalURL: req.body.originalUrl,
@@ -43,7 +44,7 @@ exports.postShortenurl = function (req, res) {
                 }
             });
         } else {
-            res.json({
+            res.status(400).json({
                 message: "Invalid Original Url"
             });
         }
@@ -53,7 +54,7 @@ exports.postShortenurl = function (req, res) {
 
 //Creating function to redirect to original URL
 exports.getRedirecturl = function (req, res) {
-    console.log(req.params.shorturl);
+    //console.log(req.params.shorturl);
     Shorturl.findOne({
         shortCode: req.params.shorturl
     }, function (err, shUrl) {
@@ -70,7 +71,7 @@ exports.getRedirecturl = function (req, res) {
             analytics.shortCode = req.params.shorturl;
             analytics.shorturlId = shUrl._id;
             // write the result as response
-            console.log(JSON.stringify(req.headers['user-agent'], null, '  '));
+            //console.log(JSON.stringify(req.headers['user-agent'], null, '  '));
             analytics.save(function (err) {
                 if (err) {
                     console.log("ERROR in saving Analytics data", err);
@@ -80,19 +81,20 @@ exports.getRedirecturl = function (req, res) {
             })
             res.redirect(shUrl.originalURL);
         } else {
-            res.json({
+            res.status(400).json({
                 error: err
             });
         }
     });
 }
 
+//Function to get analytics result for the shortened URL
 exports.postUrlAnalytics = function (req, res) {
     Analytics.find({
         shorturlId: req.body.id
     }, function (err, analytics) {
         if (err) {
-            res.send(err);
+            res.status(400).send(err);
         } else {
             result = {};
             result.os = {};
@@ -119,7 +121,7 @@ exports.postUrlAnalytics = function (req, res) {
             for (var key in c) {
                 result.browser[key] = c[key].length;
             }
-            console.log(JSON.stringify(result));
+            //console.log(JSON.stringify(result));
             res.json({
                 visits: analytics.length,
                 summary: result,

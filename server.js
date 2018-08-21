@@ -6,8 +6,11 @@ var allRoutes = require("./routes/allRoutes");
 var devRoutes = require("./routes/devRoutes");
 var cors = require("cors");
 
-//connecting to mongoLab test database
+//connecting to mongoLab database
 mongoose.connect('mongodb://pranav:pranav1234@ds125352.mlab.com:25352/shrturl');
+
+//connecting to mongoLab TEST database, use this for TESTING
+//mongoose.connect('mongodb://pranav:pranav1234@ds125372.mlab.com:25372/shrturltest');
 //Handle uncaught exceptions
 process.on("uncaughtException", function (error) {
     console.log(error.stack);
@@ -56,3 +59,7 @@ app.use("", devRoutes);
 app.listen(port, () => {
     console.log(`Server started on port`, port);
 });
+
+module.exports = {
+    app
+};
