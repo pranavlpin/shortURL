@@ -52,7 +52,13 @@
                 dataType: 'json',
                 async: false,
                 success: function (response) {
-                    alert("Visits: " + response.visits + JSON.stringify(response.summary));
+                    // alert("Visits: " + response.visits + JSON.stringify(response.summary));
+                    var divId = "analyticslist" + elem.id;
+                    document.getElementById(divId).innerHTML = "<br><b>Total visits:</b> " + response.visits +
+                        "<br><br><b>OS:</b>  " + JSON.stringify(response.summary.os, null, 2) +
+                        "<br><b>Browser:</b>  " +
+                        JSON.stringify(response.summary.browser, null, 2) + "<br><b>CPU:</b>  " + JSON.stringify(
+                            response.summary.cpu, null, 2) + "<br><br>";
                 },
             })
 
@@ -72,13 +78,15 @@
                     for (var i = 0; i < response.length; i++) {
 
                         document.getElementById("displaylist").innerHTML +=
-                            "<br><hr><p><b>OrigURL</b>=" + response[i]['originalURL'].substring(8,
+                            "<br><p><b>OrigURL</b>=" + response[i]['originalURL'].substring(8,
                                 55) +
                             '...' +
                             ", <b>ShortURL</b>=" + response[i]
                             ['shortURL'] +
                             "</p><a class='waves-effect waves-light btn' onClick=analytics(this) id=" +
-                            response[i]['_id'] + ">Analytics</a>";
+                            response[i]['_id'] +
+                            ">Analytics</a><div class='row'><div class='col s12 l12 m12 purple lighten-5' id='analyticslist" +
+                            response[i]['_id'] + "'></div></div>";
 
                     }
                 },
