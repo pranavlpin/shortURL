@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col s12 l12 m12" id="displaylist">
+            <div class="col s12 l12 m12 teal lighten-5" style='padding: 35px;' id="displaylist">
 
             </div>
         </div>
@@ -67,16 +67,18 @@
                 async: false,
                 success: function (response) {
                     document.getElementById("displaylist").innerHTML =
-                        "<h5>Shortened Urls:</h5>";
+                        "<h6>Shortened Urls:</h6>";
                     console.log(JSON.stringify(response));
                     for (var i = 0; i < response.length; i++) {
 
                         document.getElementById("displaylist").innerHTML +=
-                            "<br><p>OrigURL=" + response[i]['originalURL'].substring(8, 20) + '...' +
-                            ", ShortURL=" + response[i]
+                            "<br><hr><p><b>OrigURL</b>=" + response[i]['originalURL'].substring(8,
+                                55) +
+                            '...' +
+                            ", <b>ShortURL</b>=" + response[i]
                             ['shortURL'] +
-                            "</p><button class='editBut' onClick=analytics(this) id=" +
-                            response[i]['_id'] + ">Analytics</button>";
+                            "</p><a class='waves-effect waves-light btn' onClick=analytics(this) id=" +
+                            response[i]['_id'] + ">Analytics</a>";
 
                     }
                 },
@@ -94,9 +96,21 @@
                         originalUrl: document.getElementById("origurl").value
                     },
                     success: function (response) {
-                        document.getElementById("display").innerHTML =
-                            "<h5>Shortened URL : " + response.data.shortURL + "</h5>";
+                        //alert(JSON.stringify(response));
+                        if (response.message == 'URL details added to database') {
+                            document.getElementById("display").innerHTML =
+                                "<h5 class='blue lighten-4' style='color:blue;padding: 35px;'>Short URL : " +
+                                response.data
+                                .shortURL + "</h5>";
+                        } else {
+                            document.getElementById("display").innerHTML =
+                                "<h5 style='color:red'>Invalid URL</h5>";
+                        }
                     },
+                    error: function (err) {
+                        document.getElementById("display").innerHTML =
+                            "<h5 style='color:red;padding: 35px;' class='red lighten-5 pulse'>Invalid URL</h5>";
+                    }
                 });
             });
         });

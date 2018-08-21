@@ -43,7 +43,7 @@ exports.postShortenurl = function (req, res) {
                 }
             });
         } else {
-            res.status(401).json({
+            res.json({
                 message: "Invalid Original Url"
             });
         }
